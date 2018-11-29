@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { todoLists: props.todoLists, value: '' }
+
+  constructor() {
+    super();
+    this.state = { todoLists: [], value: '' }
+    this.fetchState()
   }
 
   render() {
@@ -20,6 +22,9 @@ class App extends Component {
           <input type="submit" value="追加" />
           </form>
         </div>
+        <div>
+          <button onClick={(e) => this.ajaxSubmit(e, this.state.todoLists)}>保存</button>
+        </div>
       </div>
     )
   }
@@ -32,7 +37,7 @@ class App extends Component {
 
       lists.push(
         <li key={i}>
-          <input key={i} type='checkbox' value={todo['title']} id={idName} onClick={(e) => this.handleCheck(e, i)} />
+          <input key={i} type='checkbox' id={idName} onChange={(e) => this.handleCheck(e, i)} checked={todo['checked']} />
           <label key={i + 1} htmlFor={idName}>
             {todo['title']}
           </label>
@@ -76,8 +81,31 @@ class App extends Component {
 
     this.setState({ todoLists: todoLists })
   }
+
+  ajaxSubmit(e, todoLists) {
+    $.ajax({
+    url: '/todo_lists',
+    type: 'post',
+    contentType: 'application/json',
+    data: JSON.stringify({
+      todo_lists: todoLists
+    })
+    }).done(json => {
+      location.href = "/todo_lists/list"
+    })
+  }
+
+  fetchState() {
+    $.ajax({
+      url: '/todo_lists/fetch',
+      type: 'get',
+      contentType: 'application/json'
+    }).done(json => {
+      this.setState({ todoLists: json })
+    })
+  }
 }
 
 render(
-    <App todoLists={[]} />,
+    <App />,
     document.getElementById('container'))

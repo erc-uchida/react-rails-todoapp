@@ -1,0 +1,7 @@
+<ul>
+  <%- @todo_lists.each do |list| %>
+    <li><%= list.checked ? "済" : "未" %> : <%= list.title %></li>
+  <%- end %>
+</ul>
+
+<%= link_to "ToDoListへ", root_path %>
