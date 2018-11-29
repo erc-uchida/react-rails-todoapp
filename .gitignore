@@ -15,5 +15,7 @@
 
 /node_modules
 /yarn-error.log
+/app/assets/javascripts/webpack
+/frontend/node_modules
 
 .byebug_history
