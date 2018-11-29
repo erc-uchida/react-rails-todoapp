@@ -32,7 +32,7 @@ class App extends Component {
 
       lists.push(
         <li key={i}>
-          <input key={i} type='checkbox' value={todo['title']} id={idName} />
+          <input key={i} type='checkbox' value={todo['title']} id={idName} onClick={(e) => this.handleCheck(e, i)} />
           <label key={i + 1} htmlFor={idName}>
             {todo['title']}
           </label>
@@ -51,18 +51,33 @@ class App extends Component {
     let todoLists = [
       ...this.state.todoLists,
       {
-        title: title
+        title: title,
+        checked: false
       }
     ]
 
     this.setState({ todoLists: todoLists, value: '' })
   }
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
+  handleChange(e) {
+    this.setState({value: e.target.value});
+  }
+
+  handleCheck(e, index) {
+    let stateTodoLists = this.state.todoLists
+    let targetTodo = stateTodoLists[index]
+    let todoLists = [
+      ...stateTodoLists.slice(0, index),
+      Object.assign({}, targetTodo, {
+        checked: !targetTodo.checked
+      }),
+      ...stateTodoLists.slice(index + 1)
+    ]
+
+    this.setState({ todoLists: todoLists })
   }
 }
 
 render(
-    <App todoLists={[{title: "テスト"}, {title: "テスト2"}]} />,
+    <App todoLists={[]} />,
     document.getElementById('container'))
